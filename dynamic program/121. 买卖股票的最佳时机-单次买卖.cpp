@@ -64,31 +64,38 @@ public:
 };
 
 /*
-枚举问题，暴力枚举遇到大的输入用例会超出时间限制，因为重复运算多，不保存中间结果
-用动态规划，本质还是枚举，因为保存中间结果到dp，所以时间少
-dp是枚举所有选择的平行宇宙
-对本题，买入卖出都是变量，定义dp[i][j]为第i天买入，j天卖出，的利润
-在平行宇宙中找递推：如果提前一天卖出，利润为dp[i][j-1]
-dp[i][j] = dp[i][j-1] + a[j] - a[i]
+按照动态规划的思想来思考这道问题。
+
+状态
+有 买入（buy） 和 卖出（sell） 这两种状态。
+
+转移方程
+对于买来说，买之后可以卖出（进入卖状态），也可以不再进行股票交易（保持买状态）。
+
+对于卖来说，卖出股票后不在进行股票交易（还在卖状态）。
+
+只有在手上的钱才算钱，手上的钱购买当天的股票后相当于亏损。也就是说当天买的话意味着损失-prices[i]，当天卖的话意味着增加prices[i]，当天卖出总的收益就是 buy+prices[i] 。
+
+所以我们只要考虑当天买和之前买哪个收益更高，当天卖和之前卖哪个收益更高。
+
+buy = max(buy, -price[i]) （注意：根据定义 buy 是负数）
+sell = max(sell, prices[i] + buy)
 */
 
+/*
 class Solution {
-public:
+public:    
     int maxProfit(vector<int>& prices) {
-    	if(prices.empty())
-    		return 0;
-
-    	vector<vector<int>> dp(prices.size(), vector<int>(prices.size(),0));
-
-    	int max = 0;
-    	for(int i = 0; i < prices.size(); i++)
-    		for(int j = i+1; j < prices.size(); j++)
-    		{
-    			dp[i][j] = dp[i][j-1] + prices[j] - prices[j-1];
-    			if(dp[i][j] > max)
-    				max = dp[i][j];
-    		}
-
-    	return max;
+        if(prices.size() <= 1)
+            return 0;
+        
+        int buy = -prices[0];
+        int sell = 0;
+        for(int i = 1; i < prices.size(); i++) {
+            buy = max(buy, -prices[i]);
+            sell = max(sell, prices[i] + buy);
+        }
+        return sell;
     }
 };
+*/
