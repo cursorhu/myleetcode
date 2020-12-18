@@ -33,7 +33,7 @@
 class Solution {
 public:
     ListNode* reverseList(ListNode* head) {
-    	ListNode *prev = nullptr, 
+    	ListNode *prev = nullptr; 
     	ListNode *next;
 		while (head) {
 			next = head->next;
